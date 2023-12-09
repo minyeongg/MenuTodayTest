@@ -3,6 +3,7 @@ package com.example.menutodaytest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -32,7 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private static final int ITEMS_PER_PAGE = 40;
     public static final int REQUEST_CODE_MENU = 101;
 
+    Button rice;
+       Button side;
+    Button soup;
+    Button noodle;
+    Button soup2;
     Button western;
+    Button dessert;
+
     ImageView imageView1;
     ImageView imageView2;
     ImageView imageView3;
@@ -54,8 +64,14 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        rice = findViewById(R.id.button);
+        side = findViewById(R.id.button2);
+        soup = findViewById(R.id.button3);
+        noodle = findViewById(R.id.button4);
+        soup2 = findViewById(R.id.button5);
         western = findViewById(R.id.button6);
+        dessert = findViewById(R.id.button7);
+
         imageView1 = findViewById(R.id.imageView);
         imageView2 = findViewById(R.id.imageView2);
         imageView3 = findViewById(R.id.imageView3);
@@ -65,7 +81,42 @@ public class MainActivity extends AppCompatActivity {
         textView3 = findViewById(R.id.textView3);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        loadMenuItems();
+        List<String> recipeLinks = loadMenuItems();
+        rice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RiceActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MENU);
+            }
+        });
+        side.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SideActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MENU);
+            }
+        });
+        soup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SoupActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MENU);
+            }
+        });
+        noodle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), NoodleActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MENU);
+            }
+        });
+        soup2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Soup2Activity.class);
+                startActivityForResult(intent, REQUEST_CODE_MENU);
+            }
+        });
         western.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,26 +124,71 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE_MENU);
             }
         });
+        dessert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DessertActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MENU);
+            }
+        });
+
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(recipeLinks.get(0)));
+                startActivity(intent);
+            }
+        });
+
+        imageView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(recipeLinks.get(1)));
+                startActivity(intent);
+            }
+        });
+
+        imageView3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.setData(Uri.parse(recipeLinks.get(2)));
+                startActivity(intent);
+            }
+        });
 
     }
 
-    private void loadMenuItems() {
+    private List<String> loadMenuItems() {
+        List<String> links = new ArrayList<>();
         disposables.add(menuRepository.getMenuItems()
                 .subscribe(
                         menuItems -> {
-                            textView1.setText(menuItems.get(0).first);
-                            Log.d("check", menuItems.get(0).first);
-                            textView2.setText(menuItems.get(1).first);
-                            textView3.setText(menuItems.get(2).first);
-                            imageView1.setImageBitmap(menuItems.get(0).second);
-                            imageView2.setImageBitmap(menuItems.get(1).second);
-                            imageView3.setImageBitmap(menuItems.get(2).second);
+                            textView1.setText(menuItems.get(0).getTitle());
+                            Log.d("check", menuItems.get(0).getTitle());
+                            textView2.setText(menuItems.get(1).getTitle());
+                            textView3.setText(menuItems.get(2).getTitle());
+                            imageView1.setImageBitmap(menuItems.get(0).getBitmap());
+                            imageView2.setImageBitmap(menuItems.get(1).getBitmap());
+                            imageView3.setImageBitmap(menuItems.get(2).getBitmap());
+                            links.add(menuItems.get(0).getLink());
+                            links.add(menuItems.get(1).getLink());
+                            links.add(menuItems.get(2).getLink());
                         },
                         throwable -> {
                             Log.e("RxJava", "Error loading menu items", throwable);
                             throwable.printStackTrace();
                         }
                 ));
+        return links;
     }
 
     @Override

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="0dp"
-    tools:context=".WesternFoodActivity">
+    tools:context=".NoodleActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toTopOf="@+id/cardView1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="양식"
+        app:title="면/만두"
         app:titleMarginStart="170dp"
         app:titleTextColor="#000000"
         tools:ignore="MissingConstraints" />

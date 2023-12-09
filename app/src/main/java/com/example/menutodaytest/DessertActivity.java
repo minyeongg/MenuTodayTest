@@ -1,4 +1,5 @@
 package com.example.menutodaytest;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,22 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class WesternFoodActivity extends AppCompatActivity {
+public class DessertActivity extends AppCompatActivity {
     TextView textView1;
     TextView textView2;
     TextView textView3;
@@ -50,7 +41,7 @@ public class WesternFoodActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_westernfood);
+        setContentView(R.layout.activity_dessert);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar (); //앱바 제어를 위해 툴바 액세스
@@ -128,29 +119,27 @@ public class WesternFoodActivity extends AppCompatActivity {
 
     private List<String> loadRecipes() {
         List<String> links = new ArrayList<>();
-        disposables.add(menuRepository.getRecipes("https://www.10000recipe.com/recipe/list.html?cat4=65&order=reco&page=1")
+        disposables.add(menuRepository.getRecipes("https://www.10000recipe.com/recipe/list.html?cat4=60&order=reco&page=1")
                 .subscribe(
-                     menuItems -> {
-                         textView1.setText(menuItems.get(0).getTitle());
-                         textView2.setText(menuItems.get(1).getTitle());
-                         textView3.setText(menuItems.get(2).getTitle());
-                         textView4.setText(menuItems.get(3).getTitle());
-                         imageView1.setImageBitmap(menuItems.get(0).getBitmap());
-                         imageView2.setImageBitmap(menuItems.get(1).getBitmap());
-                         imageView3.setImageBitmap(menuItems.get(2).getBitmap());
-                         imageView4.setImageBitmap(menuItems.get(3).getBitmap());
-                         links.add(menuItems.get(0).getLink());
-                         links.add(menuItems.get(1).getLink());
-                         links.add(menuItems.get(2).getLink());
-                         links.add(menuItems.get(3).getLink());
-                     },
-                     throwable -> {
-                           Log.e("RxJava", "Error loading menu items", throwable);
-                           throwable.printStackTrace();
-                     }
+                        menuItems -> {
+                            textView1.setText(menuItems.get(0).getTitle());
+                            textView2.setText(menuItems.get(1).getTitle());
+                            textView3.setText(menuItems.get(2).getTitle());
+                            textView4.setText(menuItems.get(3).getTitle());
+                            imageView1.setImageBitmap(menuItems.get(0).getBitmap());
+                            imageView2.setImageBitmap(menuItems.get(1).getBitmap());
+                            imageView3.setImageBitmap(menuItems.get(2).getBitmap());
+                            imageView4.setImageBitmap(menuItems.get(3).getBitmap());
+                            links.add(menuItems.get(0).getLink());
+                            links.add(menuItems.get(1).getLink());
+                            links.add(menuItems.get(2).getLink());
+                            links.add(menuItems.get(3).getLink());
+                        },
+                        throwable -> {
+                            Log.e("RxJava", "Error loading menu items", throwable);
+                            throwable.printStackTrace();
+                        }
                 ));
         return links;
     }
 }
-
-
