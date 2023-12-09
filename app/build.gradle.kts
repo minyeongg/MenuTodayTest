@@ -39,6 +39,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.13.1")
     implementation("io.reactivex.rxjava2:rxjava:2.2.6")
     implementation("io.reactivex.rxjava2:rxandroid:2.0.1")
+    implementation("com.android.volley:volley:1.2.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
