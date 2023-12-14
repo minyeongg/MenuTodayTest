@@ -6,15 +6,22 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -35,13 +42,18 @@ public class MainActivity extends AppCompatActivity {
     private static final int ITEMS_PER_PAGE = 40;
     public static final int REQUEST_CODE_MENU = 101;
 
+    DrawerLayout drawerLayout;
+
+    NavigationView navigationView;
+
     Button rice;
-       Button side;
+    Button side;
     Button soup;
     Button noodle;
     Button soup2;
     Button western;
     Button dessert;
+    Button region;
 
     ImageView imageView1;
     ImageView imageView2;
@@ -64,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navigationView = findViewById(R.id.navigationView);
+        Menu menu = navigationView.getMenu();
+        MenuItem menuItem1 = menu.findItem(R.id.menu1);
         rice = findViewById(R.id.button);
         side = findViewById(R.id.button2);
         soup = findViewById(R.id.button3);
@@ -81,6 +97,19 @@ public class MainActivity extends AppCompatActivity {
         textView3 = findViewById(R.id.textView3);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.menu);
+        }
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 여기에 네비게이션 뷰를 여는 코드를 추가
+                // 예를 들어, DrawerLayout을 사용하는 경우:
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
         List<String> recipeLinks = loadMenuItems();
         rice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,6 +158,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), DessertActivity.class);
                 startActivityForResult(intent, REQUEST_CODE_MENU);
+            }
+        });
+
+        menuItem1.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                Intent intent = new Intent(MainActivity.this, RegionActivity.class);
+                startActivity(intent);
+                return true;
             }
         });
 
