@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="디저트"
-        app:titleMarginStart="170dp"
+        app:titleMarginStart="130dp"
         app:titleTextColor="#000000"
         tools:ignore="MissingConstraints" />
 

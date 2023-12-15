@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,41 +73,56 @@ public class RegionActivity extends AppCompatActivity {
     }
 
     public void makeRequest() {
-        String url = "https://www.kamis.or.kr/service/price/xml.do?action=dailyCountyList&p_cert_key=e7bec3d5-7cd4-4f90-889d-3a1ef88aca63&p_cert_id=3880&p_returntype=json&p_countycode="+ editText.getText().toString();
+        if(!isValidRegionCode(editText.getText().toString())) {
+            showToast("지역코드를 정확히 입력하세요.");
+            return;
+        } else {
+            String url = "https://www.kamis.or.kr/service/price/xml.do?action=dailyCountyList&p_cert_key=e7bec3d5-7cd4-4f90-889d-3a1ef88aca63&p_cert_id=3880&p_returntype=json&p_countycode=" + editText.getText().toString();
+            StringRequest request = new StringRequest(
+                    Request.Method.GET,
+                    url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            println("응답 -> " + response);
 
-        StringRequest request = new StringRequest(
-                Request.Method.GET,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        println("응답 -> " + response);
+                            processResponse(response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            println("에러 -> " + error.getMessage());
+                            showToast("에러: " + error.getMessage());
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<String, String>();
 
-                        processResponse(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        println("에러 -> " + error.getMessage());
-                    }
+                    return params;
                 }
-        ) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String, String>();
+            };
 
-                return params;
-            }
-        };
+            request.setShouldCache(false);
+            requestQueue.add(request);
+            println("요청 보냄.");
+        }
 
-        request.setShouldCache(false);
-        requestQueue.add(request);
-        println("요청 보냄.");
+
     }
 
+    private boolean isValidRegionCode(String code) {
+        List<String> validCodes = Arrays.asList("1101", "2100", "2200", "2300", "2401", "2601", "3111", "3311", "3511", "3911", "3714", "3814", "3145");
+        return validCodes.contains(code);
+    }
     public void println(String data) {
         Log.d("RegionActivity", data);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(RegionActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     public void processResponse(String response) {
@@ -169,7 +186,11 @@ public class RegionActivity extends AppCompatActivity {
         if (element == null || element.isJsonNull()) {
             return null;
         }
-        return element.getAsString();
+        if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isString()) {
+            return element.getAsString();
+        } else {
+            return null;
+        }
     }
 
     private static String[] getStringArray(JsonObject jsonObject, String key) {

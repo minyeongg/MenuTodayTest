@@ -105,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 여기에 네비게이션 뷰를 여는 코드를 추가
-                // 예를 들어, DrawerLayout을 사용하는 경우:
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
